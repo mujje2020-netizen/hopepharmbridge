@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HopePharm Bridge 🌿 Ethiopia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0b2545;
+    --teal: #0e7c7b;
+    --gold: #e8a020;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --muted: #607d9a;
+    --border: #dce6f0;
+    --danger: #c0392b;
+    --success: #1e8c5a;
+    --card-shadow: 0 4px 24px rgba(11,37,69,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ---- LANDING ---- */
+  #landing {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b2545 0%, #0e7c7b 100%);
+    display: flex !important; flex-direction: column; align-items: center; justify-content: center;
+    padding: 32px 20px; text-align: center;
+  }
+  #landing .logo { font-size: 52px; margin-bottom: 12px; }
+  #landing h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; margin-bottom: 6px; }
+  #landing .tagline { color: rgba(255,255,255,0.75); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
+  .role-cards { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 360px; }
+  .role-card {
+    background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 16px; padding: 20px 24px; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 16px; text-align: left;
+  }
+  .role-card:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+  .role-card .icon { font-size: 32px; }
+  .role-card h3 { color: #fff; font-size: 16px; margin-bottom: 2px; }
+  .role-card p { color: rgba(255,255,255,0.65); font-size: 12px; }
+
+  /* ---- PAYMENT WALL ---- */
+  #paywall {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0b2545 0%, #1a4a6b 100%);
+    display: flex !important; align-items: center; justify-content: center; padding: 24px;
+  }
+  .paywall-card {
+    background: #fff; border-radius: 20px; padding: 36px 28px;
+    max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .paywall-card .badge { background: var(--teal); color: #fff; font-size: 11px; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 16px; letter-spacing: 1px; }
+  .paywall-card h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+  .paywall-card .price { font-size: 40px; font-weight: 700; color: var(--teal); margin: 16px 0 4px; }
+  .paywall-card .price span { font-size: 16px; color: var(--muted); font-weight: 400; }
+  .perks { text-align: left; margin: 20px 0; }
+  .perk { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; font-size: 14px; color: var(--navy); }
+  .perk::before { content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .pay-input { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; margin-bottom: 12px; outline: none; font-family: 'DM Sans', sans-serif; }
+  .pay-input:focus { border-color: var(--teal); }
+  .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .btn-teal { background: var(--teal); color: #fff; }
+  .btn-teal:hover { background: #0a6a69; transform: translateY(-1px); }
+  .btn-navy { background: var(--navy); color: #fff; }
+  .btn-navy:hover { background: #0d2e5a; }
+  .btn-gold { background: var(--gold); color: #fff; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+  .back-link { margin-top: 14px; color: var(--muted); font-size: 13px; cursor: pointer; }
+  .back-link:hover { color: var(--teal); }
+
+  /* ---- MAIN APP ---- */
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app.active { display: flex; }
+
+  .app-header {
+    background: var(--navy); color: #fff; padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .header-brand { display: flex; align-items: center; gap: 10px; }
+  .header-brand .logo { font-size: 22px; }
+  .header-brand h1 { font-family: 'Playfair Display', serif; font-size: 18px; }
+  .header-brand small { display: block; font-size: 10px; opacity: 0.6; letter-spacing: 1.5px; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .icon-btn { background: rgba(255,255,255,0.12); border: none; color: #fff; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 13px; position: relative; }
+  .badge-count { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #fff; font-size: 10px; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+  .nav-tabs { background: #fff; border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; scrollbar-width: none; }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab { padding: 13px 18px; border: none; background: none; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--muted); white-space: nowrap; border-bottom: 3px solid transparent; font-weight: 500; transition: all 0.2s; }
+  .nav-tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
+
+  .content { flex: 1; padding: 20px 16px; }
+
+  /* SEARCH BAR */
+  .search-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .search-input { flex: 1; min-width: 200px; padding: 11px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; font-family: 'DM Sans', sans-serif; }
+  .search-input:focus { border-color: var(--teal); }
+  select.filter-select { padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; background: #fff; outline: none; font-family: 'DM Sans', sans-serif; color: var(--navy); }
+
+  /* PRODUCT CARDS */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .product-card {
+    background: #fff; border-radius: 14px; padding: 20px;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(11,37,69,0.15); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .category-tag { background: #e6f4f4; color: var(--teal); font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .verified-tag { color: var(--success); font-size: 12px; font-weight: 600; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+  .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+  .product-meta { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .price-tag { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .btn-sm { padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .btn-sm-teal { background: var(--teal); color: #fff; }
+  .btn-sm-teal:hover { background: #0a6a69; }
+  .btn-sm-wa { background: #25d366; color: #fff; }
+  .btn-sm-wa:hover { background: #1fb959; }
+
+  /* SELLERS */
+  .sellers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .seller-card { background: #fff; border-radius: 14px; padding: 22px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+  .seller-avatar { width: 52px; height: 52px; background: var(--navy); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px; }
+  .seller-name { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 4px; }
+  .seller-badge { color: var(--success); font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+  .seller-info { font-size: 13px; color: var(--muted); line-height: 2; }
+  .wa-btn { margin-top: 14px; width: 100%; padding: 10px; background: #25d366; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .wa-btn:hover { background: #1fb959; }
+
+  /* ORDERS */
+  .orders-empty { text-align: center; padding: 60px 20px; }
+  .orders-empty .emoji { font-size: 56px; margin-bottom: 16px; }
+  .order-item { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); }
+  .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .order-id { font-size: 12px; color: var(--muted); }
+  .order-status { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+  .status-pending { background: #fff3cd; color: #856404; }
+  .status-confirmed { background: #d1fae5; color: var(--success); }
+
+  /* ADMIN */
+  #admin-login {
+    min-height: 100vh; background: linear-gradient(135deg, #0b2545, #0e7c7b);
+    display: flex !important; align-items: center; justify-content: center; padding: 24px;
+  }
+  .admin-card { background: #fff; border-radius: 20px; padding: 40px 32px; max-width: 380px; width: 100%; }
+  .admin-card h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 6px; text-align: center; }
+  .admin-card p { color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: block; letter-spacing: 0.5px; }
+  .form-input { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; font-family: 'DM Sans', sans-serif; }
+  .form-input:focus { border-color: var(--teal); }
+  .error-msg { color: var(--danger); font-size: 12px; margin-top: 8px; text-align: center; }
+
+  /* ADMIN PANEL */
+  #admin-panel { display: none; min-height: 100vh; flex-direction: column; }
+  #admin-panel.active { display: flex; }
+  .admin-header { background: var(--navy); color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .admin-header h1 { font-family: 'Playfair Display', serif; font-size: 18px; }
+  .admin-content { padding: 20px 16px; flex: 1; }
+  .admin-tabs { display: flex; gap: 4px; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .admin-tab { padding: 13px 18px; border: none; background: none; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--muted); border-bottom: 3px solid transparent; font-weight: 500; white-space: nowrap; }
+  .admin-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: var(--card-shadow); text-align: center; border: 1px solid var(--border); }
+  .stat-icon { font-size: 28px; margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 700; color: var(--navy); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 16px; }
+  .form-card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: var(--card-shadow); margin-bottom: 24px; border: 1px solid var(--border); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+  .admin-list-item { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .item-info h4 { font-size: 15px; color: var(--navy); margin-bottom: 3px; }
+  .item-info p { font-size: 12px; color: var(--muted); }
+  .delete-btn { background: #fee; border: none; color: var(--danger); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+  /* CART MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11,37,69,0.7); z-index: 200; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet { background: #fff; border-radius: 20px 20px 0 0; padding: 28px 20px; width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 0 auto 20px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 16px; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .cart-item-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .cart-item-sub { font-size: 12px; color: var(--muted); }
+  .cart-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; }
+  .cart-total { font-size: 18px; font-weight: 700; color: var(--navy); padding: 16px 0; }
+  .modal-close { background: none; border: none; font-size: 22px; color: var(--muted); cursor: pointer; float: right; }
+
+  /* NOTIFICATION */
+  .notif { position: fixed; top: 18px; right: 18px; background: var(--navy); color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .notif.show { opacity: 1; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty .e-icon { font-size: 48px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="logo" onclick="secretAdminTap()" style="cursor:default;user-select:none">🏥</div>
+  <h1>HopePharm Bridge</h1>
+  <div class="tagline">Connecting Care Across Ethiopia</div>
+  <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:-30px;margin-bottom:40px;font-style:italic">Where Medicine Meets Trust</div>
+  <div class="role-cards">
+    <div class="role-card" onclick="goToBuyer()">
+      <div class="icon">🛒</div>
+      <div>
+        <h3>I'm a Buyer</h3>
+        <p>Browse & order pharmaceutical products from verified suppliers</p>
+      </div>
+    </div>
+    <div class="role-card" onclick="goToSeller()">
+      <div class="icon">📦</div>
+      <div>
+        <h3>I'm a Seller / Company <span style="background:var(--gold);color:#fff;font-size:10px;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle">ETB 999/mo</span></h3>
+        <p>Pay a listing fee to get your products in front of thousands of buyers</p>
+      </div>
+    </div>
+  </div>
+  <!-- Admin access hidden - tap logo 5 times -->
+</div>
+
+
+<!-- BUYER WELCOME -->
+<div id="buyer-welcome" class="screen" style="display:none">
+  <div style="min-height:100vh;background:linear-gradient(160deg,#0b2545 0%,#0e7c7b 60%,#1e8c5a 100%);display:flex !important;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;position:relative;overflow:hidden;">
+    
+    <!-- Background circles decoration -->
+    <div style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.05)"></div>
+    <div style="position:absolute;bottom:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05)"></div>
+    <div style="position:absolute;top:40%;left:-80px;width:160px;height:160px;border-radius:50%;background:rgba(14,124,123,0.3)"></div>
+
+    <!-- Content -->
+    <div style="position:relative;z-index:2;max-width:380px;width:100%">
+      <div style="font-size:64px;margin-bottom:8px;animation:bounce 2s infinite">🌿</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:30px;color:#fff;margin-bottom:6px;line-height:1.2">Welcome to<br>HopePharm Bridge</h1>
+      <p style="color:rgba(255,255,255,0.7);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ethiopia's Trusted Pharma Network</p>
+      <div style="width:50px;height:3px;background:var(--gold);border-radius:3px;margin:0 auto 28px"></div>
+
+      <!-- Feature pills -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:32px">
+        <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.2)">✓ 100% Free Access</span>
+        <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.2)">✓ Verified Suppliers</span>
+        <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.2)">✓ Direct WhatsApp Contact</span>
+        <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.2)">✓ Quality Guaranteed</span>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:flex;justify-content:center;gap:24px;margin-bottom:36px">
+        <div style="text-align:center">
+          <div style="font-size:24px;font-weight:700;color:#fff">500+</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6)">Products</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,0.2)"></div>
+        <div style="text-align:center">
+          <div style="font-size:24px;font-weight:700;color:#fff">50+</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6)">Suppliers</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,0.2)"></div>
+        <div style="text-align:center">
+          <div style="font-size:24px;font-weight:700;color:#fff">100%</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6)">Verified</div>
+        </div>
+      </div>
+
+      <!-- CTA Button -->
+      <button onclick="openBuyerApp()" style="width:100%;padding:16px;background:#fff;color:var(--navy);border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.2);margin-bottom:14px;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        Browse Marketplace →
+      </button>
+      <button onclick="showScreen('landing')" style="width:100%;padding:13px;background:transparent;color:rgba(255,255,255,0.7);border:1.5px solid rgba(255,255,255,0.3);border-radius:14px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif">
+        ← Go Back
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes bounce {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)}
+}
+</style>
+
+<!-- SELLER PAYMENT WALL -->
+<div id="seller-paywall" class="screen" style="display:none">
+  <div style="min-height:100vh;background:linear-gradient(160deg,#0b2545,#1e8c5a);display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div class="paywall-card">
+      <div class="badge" style="background:var(--success)">SELLER LISTING FEE</div>
+      <h2>List Your Company on HopePharm Bridge</h2>
+      <p style="color:#607d9a;font-size:14px;margin-bottom:8px;">One-time monthly listing fee — buyers contact you directly for free</p>
+      <div class="price" style="color:var(--success)">ETB 999 <span>/ month</span></div>
+      <div class="perks">
+        <div class="perk">Get listed on HopePharm Bridge marketplace</div>
+        <div class="perk">Verified seller badge shown to all buyers</div>
+        <div class="perk">Buyers contact you directly via WhatsApp — free for them</div>
+        <div class="perk">Your products featured in the supplier directory</div>
+        <div class="perk">Admin reviews &amp; approves your listing within 24hrs</div>
+      </div>
+      <input class="pay-input" id="sel-company" placeholder="Company Name" />
+      <input class="pay-input" id="sel-phone" placeholder="WhatsApp Business Number" />
+      <input class="pay-input" id="sel-ref" placeholder="Payment Reference / TxID" />
+      <p style="font-size:12px;color:#607d9a;margin-bottom:14px;">Send <strong id="sell-amount">ETB 999</strong> via <span id="sell-method">CBE Birr / Telebirr</span> to <strong id="sell-number">0911 000 000</strong> then enter your transaction ID above</p>
+      <button class="btn btn-teal" onclick="submitSellerPayment()">✓ Submit for Approval</button>
+      <div class="back-link" onclick="showScreen('landing')">← Go Back</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN BUYER APP -->
+<div id="app">
+  <div class="app-header">
+    <div class="header-brand">
+      <div class="logo">🏥</div>
+      <div>
+        <h1>HopePharm Bridge</h1>
+        <small>FREE ACCESS · ETHIOPIA</small>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleCart()">🛒 <span id="cart-count-badge" class="badge-count" style="display:none">0</span></button>
+      <button class="icon-btn" onclick="showScreen('landing')" style="font-size:11px">Exit</button>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('marketplace', this)">🏪 Marketplace</button>
+    <button class="nav-tab" onclick="switchTab('sellers', this)">🏭 Suppliers</button>
+    <button class="nav-tab" onclick="switchTab('orders', this)">📋 My Orders</button>
+  </div>
+  <div class="content">
+
+    <!-- MARKETPLACE -->
+    <div id="tab-marketplace">
+      <div class="search-row">
+        <input class="search-input" id="search-input" placeholder="🔍 Search medicines..." oninput="renderProducts()" />
+        <select class="filter-select" id="cat-filter" onchange="renderProducts()">
+          <option value="">All Categories</option>
+          <option>Antibiotics</option>
+          <option>Diabetes</option>
+          <option>Cardiovascular</option>
+          <option>Gastro</option>
+          <option>Respiratory</option>
+          <option>Analgesics</option>
+          <option>Vitamins</option>
+        </select>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+
+    <!-- SELLERS -->
+    <div id="tab-sellers" style="display:none">
+      <h2 style="font-family:'Playfair Display',serif;margin-bottom:18px;color:var(--navy)">Verified Pharmaceutical Suppliers</h2>
+      <div class="sellers-grid" id="sellers-grid"></div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="tab-orders" style="display:none">
+      <h2 style="font-family:'Playfair Display',serif;margin-bottom:18px;color:var(--navy)">My Orders</h2>
+      <div id="orders-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cart-modal">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="toggleCart()">✕</button>
+    <div class="modal-handle"></div>
+    <div class="modal-title">🛒 Your Order</div>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total"></div>
+    <button class="btn btn-teal" onclick="placeOrder()" style="width:100%">✓ Place Order</button>
+    <button class="btn btn-outline" onclick="toggleCart()" style="width:100%;margin-top:10px">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="admin-login" class="screen">
+  <div class="admin-card">
+    <h2>🔐 Admin Login</h2>
+    <p>Access your HopePharm Bridge control panel</p>
+    <div class="form-group">
+      <label class="form-label">USERNAME</label>
+      <input class="form-input" id="admin-user" placeholder="admin" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">PASSWORD</label>
+      <input class="form-input" type="password" id="admin-pass" placeholder="••••••••" />
+    </div>
+    <div class="error-msg" id="login-error"></div>
+    <button class="btn btn-navy" style="width:100%;margin-top:16px" onclick="adminLogin()">Login to Dashboard</button>
+    <div class="back-link" style="text-align:center;margin-top:14px" onclick="showScreen('landing')">← Back to Home</div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <div>
+      <h1>⚙️ Admin Dashboard</h1>
+      <small style="opacity:0.6;font-size:11px">HopePharm Bridge Control Panel</small>
+    </div>
+    <button class="icon-btn" onclick="adminLogout()">Logout</button>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchAdminTab('overview', this)">📊 Overview</button>
+    <button class="admin-tab" onclick="switchAdminTab('add-product', this)">➕ Add Product</button>
+    <button class="admin-tab" onclick="switchAdminTab('manage-products', this)">💊 Products</button>
+    <button class="admin-tab" onclick="switchAdminTab('add-company', this)">🏭 Add Company</button>
+    <button class="admin-tab" onclick="switchAdminTab('manage-companies', this)">🏢 Companies</button>
+    <button class="admin-tab" onclick="switchAdminTab('payments', this)">💳 Payments</button>
+    <button class="admin-tab" onclick="switchAdminTab('settings', this)">⚙️ Settings</button>
+  </div>
+  <div class="admin-content">
+    <!-- OVERVIEW -->
+    <div id="atab-overview">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">💊</div><div class="stat-value" id="stat-products">0</div><div class="stat-label">Products Listed</div></div>
+        <div class="stat-card"><div class="stat-icon">🏭</div><div class="stat-value" id="stat-companies">0</div><div class="stat-label">Companies</div></div>
+        <div class="stat-card"><div class="stat-icon">🛒</div><div class="stat-value" id="stat-orders">0</div><div class="stat-label">Total Orders</div></div>
+        <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value" id="stat-revenue">ETB 0</div><div class="stat-label">Revenue</div></div>
+      </div>
+      <h3 class="section-title">Pending Payment Approvals</h3>
+      <div id="pending-payments"></div>
+    </div>
+
+    <!-- ADD PRODUCT -->
+    <div id="atab-add-product" style="display:none">
+      <h3 class="section-title">Add New Product</h3>
+      <div class="form-card">
+        <div class="form-group"><label class="form-label">PRODUCT NAME *</label><input class="form-input" id="np-name" placeholder="e.g. Amoxicillin 500mg" /></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">CATEGORY</label>
+            <select class="form-input" id="np-cat">
+              <option>Antibiotics</option><option>Diabetes</option><option>Cardiovascular</option>
+              <option>Gastro</option><option>Respiratory</option><option>Analgesics</option><option>Vitamins</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">PRICE (ETB) *</label><input class="form-input" id="np-price" placeholder="e.g. 450" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">STOCK (units)</label><input class="form-input" id="np-stock" placeholder="e.g. 500" /></div>
+          <div class="form-group"><label class="form-label">SUPPLIER</label>
+            <select class="form-input" id="np-supplier"></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">DESCRIPTION</label><input class="form-input" id="np-desc" placeholder="Brief product description" /></div>
+        <button class="btn btn-teal" style="width:100%;margin-top:8px" onclick="addProduct()">➕ Add Product to Marketplace</button>
+      </div>
+    </div>
+
+    <!-- MANAGE PRODUCTS -->
+    <div id="atab-manage-products" style="display:none">
+      <h3 class="section-title">All Products</h3>
+      <div id="admin-products-list"></div>
+    </div>
+
+    <!-- ADD COMPANY -->
+    <div id="atab-add-company" style="display:none">
+      <h3 class="section-title">Add / Approve Company</h3>
+      <div class="form-card">
+        <div class="form-group"><label class="form-label">COMPANY NAME *</label><input class="form-input" id="nc-name" placeholder="e.g. EthioPharm Ltd" /></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">LOCATION</label><input class="form-input" id="nc-location" placeholder="e.g. Addis Ababa" /></div>
+          <div class="form-group"><label class="form-label">WHATSAPP NUMBER</label><input class="form-input" id="nc-phone" placeholder="e.g. +251911000000" /></div>
+        </div>
+        <div class="form-group"><label class="form-label">SPECIALTY</label><input class="form-input" id="nc-specialty" placeholder="e.g. Antibiotics & Vaccines" /></div>
+        <button class="btn btn-teal" style="width:100%;margin-top:8px" onclick="addCompany()">🏭 Add Company</button>
+      </div>
+    </div>
+
+    <!-- MANAGE COMPANIES -->
+    <div id="atab-manage-companies" style="display:none">
+      <h3 class="section-title">All Companies</h3>
+      <div id="admin-companies-list"></div>
+    </div>
+
+
+    <!-- SETTINGS -->
+    <div id="atab-settings" style="display:none">
+      <h3 class="section-title">⚙️ Admin Settings</h3>
+      <div class="form-card" style="max-width:460px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+          <div style="width:48px;height:48px;background:var(--navy);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px">🔐</div>
+          <div>
+            <div style="font-weight:700;color:var(--navy);font-size:15px">Change Admin Password</div>
+            <div style="font-size:12px;color:var(--muted)">Only you can access this panel</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CURRENT PASSWORD</label>
+          <input class="form-input" type="password" id="s-current" placeholder="Enter current password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">NEW PASSWORD</label>
+          <input class="form-input" type="password" id="s-new" placeholder="Enter new password (min 6 chars)" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">CONFIRM NEW PASSWORD</label>
+          <input class="form-input" type="password" id="s-confirm" placeholder="Re-enter new password" />
+        </div>
+        <div id="s-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;display:none"></div>
+        <div id="s-success" style="color:var(--success);font-size:13px;margin-bottom:10px;display:none;font-weight:600"></div>
+        <button class="btn btn-teal" style="width:100%" onclick="changePassword()">🔒 Update Password</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">Your new password will be saved and required on next login</p>
+      </div>
+
+      <div class="form-card" style="max-width:460px;margin-top:16px">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:14px;font-size:15px">🏥 HopePharm Bridge — App Info</div>
+        <div style="font-size:13px;color:var(--muted);line-height:2.2">
+          <div>📱 App: <strong style="color:var(--navy)">HopePharm Bridge Ethiopia</strong></div>
+          <div>👤 Admin Username: <strong style="color:var(--navy)">admin</strong></div>
+          <div>🔑 Current Password: <strong style="color:var(--navy)" id="show-current-pw">••••••••</strong>
+            <span onclick="toggleShowPw()" style="cursor:pointer;color:var(--teal);font-size:12px;margin-left:8px" id="pw-toggle-btn">Show</span>
+          </div>
+          <div>💰 Buyer Access: <strong style="color:var(--success)">FREE</strong></div>
+          <div>🏭 Seller Listing Fee: <strong style="color:var(--navy)">ETB 999/month</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div id="atab-payments" style="display:none">
+      <h3 class="section-title">Payment Submissions</h3>
+      <div id="payments-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+const state = {
+  products: [
+    { id: 1, name: "Amoxicillin 500mg", category: "Antibiotics", supplier: "EthioPharm Ltd", price: 680, stock: 500, verified: true, description: "Broad-spectrum antibiotic for bacterial infections" },
+    { id: 2, name: "Metformin 850mg", category: "Diabetes", supplier: "AddisRx Supply", price: 480, stock: 1200, verified: true, description: "First-line medication for type 2 diabetes management" },
+    { id: 3, name: "Atorvastatin 20mg", category: "Cardiovascular", supplier: "CardioMed Ethiopia", price: 870, stock: 800, verified: true, description: "Statin for lowering cholesterol levels" },
+    { id: 4, name: "Omeprazole 20mg", category: "Gastro", supplier: "EthioPharm Ltd", price: 420, stock: 2000, verified: true, description: "Proton pump inhibitor for acid reflux treatment" },
+    { id: 5, name: "Salbutamol Inhaler", category: "Respiratory", supplier: "RespiCare Ethiopia", price: 330, stock: 350, verified: true, description: "Bronchodilator for asthma and COPD relief" },
+    { id: 6, name: "Paracetamol 500mg", category: "Analgesics", supplier: "AddisRx Supply", price: 270, stock: 5000, verified: true, description: "Widely used for pain relief and fever reduction" },
+  ],
+  companies: [
+    { id: 1, name: "EthioPharm Ltd", location: "Addis Ababa", phone: "+251911100001", specialty: "Antibiotics & Vaccines", verified: true, products: 48, rating: 4.8 },
+    { id: 2, name: "AddisRx Supply", location: "Addis Ababa", phone: "+251911100002", specialty: "Chronic Disease Meds", verified: true, products: 120, rating: 4.9 },
+    { id: 3, name: "CardioMed Ethiopia", location: "Hawassa", phone: "+251911100003", specialty: "Cardiovascular", verified: true, products: 35, rating: 4.7 },
+    { id: 4, name: "RespiCare Ethiopia", location: "Dire Dawa", phone: "+251911100004", specialty: "Respiratory Drugs", verified: true, products: 22, rating: 4.9 },
+  ],
+  cart: [],
+  orders: [],
+  payments: [],
+  nextId: 100,
+  adminPassword: 'medmarket2024',
+  paymentNumber: '0911 000 000',
+  paymentMethod: 'CBE Birr / Telebirr',
+};
+
+
+// ============ SECRET ADMIN ACCESS ============
+let adminTapCount = 0;
+let adminTapTimer = null;
+function secretAdminTap() {
+  adminTapCount++;
+  clearTimeout(adminTapTimer);
+  adminTapTimer = setTimeout(() => { adminTapCount = 0; }, 2000);
+  if (adminTapCount >= 5) {
+    adminTapCount = 0;
+    showScreen('admin-login');
+  }
+}
+
+// ============ SCREENS ============
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'none';
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); el.style.display = ''; }
+}
+function goToBuyer() { showScreen('buyer-welcome'); }
+function goToSeller() { showScreen('seller-paywall'); }
+
+// ============ PAYMENT WALL ============
+function submitPayment() {
+  const name = document.getElementById('pay-name').value.trim();
+  const phone = document.getElementById('pay-phone').value.trim();
+  const ref = document.getElementById('pay-ref').value.trim();
+  if (!name || !phone || !ref) return showNotif("⚠️ Please fill all fields");
+  state.payments.push({ type: 'buyer', name, phone, ref, status: 'pending', date: new Date().toLocaleDateString() });
+  showNotif("✓ Submitted! Access granted (demo mode)");
+  setTimeout(() => openBuyerApp(), 1200);
+}
+function submitSellerPayment() {
+  const company = document.getElementById('sel-company').value.trim();
+  const phone = document.getElementById('sel-phone').value.trim();
+  const ref = document.getElementById('sel-ref').value.trim();
+  if (!company || !phone || !ref) return showNotif("⚠️ Please fill all fields");
+  state.payments.push({ type: 'seller', name: company, phone, ref, status: 'pending', date: new Date().toLocaleDateString() });
+  showNotif("✓ Submitted! Our team will review within 24hrs.");
+}
+
+// ============ BUYER APP ============
+function openBuyerApp() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  renderProducts();
+  renderSellers();
+  renderOrders();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['marketplace','sellers','orders'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
+  });
+}
+
+function renderProducts() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const cat = document.getElementById('cat-filter')?.value || '';
+  const filtered = state.products.filter(p =>
+    (p.name.toLowerCase().includes(search) || p.supplier.toLowerCase().includes(search)) &&
+    (!cat || p.category === cat)
+  );
+  const grid = document.getElementById('products-grid');
+  if (!grid) return;
+  if (!filtered.length) { grid.innerHTML = '<div class="empty"><div class="e-icon">🔍</div><p>No products found</p></div>'; return; }
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="card-top">
+        <span class="category-tag">${p.category}</span>
+        ${p.verified ? '<span class="verified-tag">✓ Verified</span>' : ''}
+      </div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.description}</div>
+      <div class="product-meta">🏢 ${p.supplier}</div>
+      <div class="product-meta">📦 ${p.stock} units available</div>
+      <div class="card-footer">
+        <div class="price-tag">ETB ${p.price.toLocaleString()}</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sm btn-sm-teal" onclick="addToCart(${p.id})">+ Order</button>
+          <button class="btn-sm btn-sm-wa" onclick="contactWA('${getPhone(p.supplier)}','${p.name}')">💬 WA</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getPhone(supplierName) {
+  const c = state.companies.find(c => c.name === supplierName);
+  return c ? c.phone : '+251911000000';
+}
+
+function renderSellers() {
+  const grid = document.getElementById('sellers-grid');
+  if (!grid) return;
+  grid.innerHTML = state.companies.map(c => `
+    <div class="seller-card">
+      <div class="seller-avatar">🏭</div>
+      <div class="seller-name">${c.name}</div>
+      <div class="seller-badge">${c.verified ? '✓ Verified Supplier' : 'Pending'}</div>
+      <div class="seller-info">
+        <div>📍 ${c.location}</div>
+        <div>💊 ${c.specialty}</div>
+        <div>📦 ${c.products} products</div>
+        <div>⭐ ${c.rating}/5.0</div>
+      </div>
+      <button class="wa-btn" onclick="contactWA('${c.phone}','inquiry')">💬 WhatsApp Supplier</button>
+    </div>
+  `).join('');
+}
+
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  if (!list) return;
+  if (!state.orders.length) {
+    list.innerHTML = '<div class="orders-empty"><div class="emoji">📋</div><h3 style="color:var(--navy)">No orders yet</h3><p style="color:var(--muted)">Add products from the marketplace</p></div>';
+    return;
+  }
+  list.innerHTML = state.orders.map(o => `
+    <div class="order-item">
+      <div class="order-header">
+        <div>
+          <div style="font-weight:700;color:var(--navy)">${o.items.map(i=>i.name).join(', ')}</div>
+          <div class="order-id">Order #${o.id} · ${o.date}</div>
+        </div>
+        <span class="order-status ${o.status === 'confirmed' ? 'status-confirmed' : 'status-pending'}">${o.status}</span>
+      </div>
+      <div style="font-size:14px;color:var(--muted)">Total: <strong style="color:var(--navy)">ETB ${o.total.toLocaleString()}</strong></div>
+    </div>
+  `).join('');
+}
+
+// ============ CART ============
+function addToCart(id) {
+  const p = state.products.find(x => x.id === id);
+  if (!p) return;
+  const ex = state.cart.find(x => x.id === id);
+  if (ex) ex.qty++; else state.cart.push({ ...p, qty: 1 });
+  updateCartBadge();
+  showNotif(`✓ ${p.name} added to cart`);
+}
+function removeFromCart(id) {
+  state.cart = state.cart.filter(x => x.id !== id);
+  updateCartBadge();
+  renderCart();
+}
+function updateCartBadge() {
+  const b = document.getElementById('cart-count-badge');
+  b.textContent = state.cart.length;
+  b.style.display = state.cart.length ? 'flex' : 'none';
+}
+function toggleCart() {
+  const m = document.getElementById('cart-modal');
+  m.classList.toggle('open');
+  renderCart();
+}
+function renderCart() {
+  const items = document.getElementById('cart-items');
+  const total = document.getElementById('cart-total');
+  if (!state.cart.length) {
+    items.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px">Your cart is empty</p>';
+    total.textContent = '';
+    return;
+  }
+  items.innerHTML = state.cart.map(i => `
+    <div class="cart-item">
+      <div>
+        <div class="cart-item-name">${i.name}</div>
+        <div class="cart-item-sub">Qty: ${i.qty} × ETB ${i.price.toLocaleString()}</div>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart(${i.id})">✕</button>
+    </div>
+  `).join('');
+  const t = state.cart.reduce((s, i) => s + i.price * i.qty, 0);
+  total.textContent = `Total: ETB ${t.toLocaleString()}`;
+}
+function placeOrder() {
+  if (!state.cart.length) return;
+  const total = state.cart.reduce((s, i) => s + i.price * i.qty, 0);
+  state.orders.push({ id: ++state.nextId, items: [...state.cart], total, status: 'pending', date: new Date().toLocaleDateString() });
+  state.cart = [];
+  updateCartBadge();
+  toggleCart();
+  showNotif('✓ Order placed successfully!');
+  renderOrders();
+  document.getElementById('stat-orders').textContent = state.orders.length;
+}
+
+// ============ WHATSAPP ============
+function contactWA(phone, product) {
+  const msg = encodeURIComponent(`Hello, I found your product "${product}" on HopePharm Bridge Ethiopia. I'd like to enquire about availability and pricing.`);
+  window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`, '_blank');
+}
+
+// ============ ADMIN ============
+function adminLogin() {
+  const u = document.getElementById('admin-user').value.trim();
+  const p = document.getElementById('admin-pass').value.trim();
+  if (u === 'admin' && p === state.adminPassword) {
+    // Hide ALL screens and app
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active');
+      s.style.display = 'none';
+    });
+    document.getElementById('app').style.display = 'none';
+    // Show admin panel
+    const ap = document.getElementById('admin-panel');
+    ap.style.display = 'flex';
+    ap.style.flexDirection = 'column';
+    ap.style.minHeight = '100vh';
+    // Refresh data
+    refreshAdminStats();
+    renderAdminProducts();
+    renderAdminCompanies();
+    renderPayments();
+    renderPendingPayments();
+    updateSupplierDropdown();
+  } else {
+    document.getElementById('login-error').textContent = '✕ Wrong username or password. Please try again.';
+  }
+}
+function adminLogout() {
+  document.getElementById('admin-panel').style.display = 'none';
+  showScreen('landing');
+}
+function switchAdminTab(name, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['overview','add-product','manage-products','add-company','manage-companies','payments','settings'].forEach(t => {
+    document.getElementById('atab-'+t).style.display = t === name ? 'block' : 'none';
+  });
+  if (name === 'add-product') updateSupplierDropdown();
+}
+function refreshAdminStats() {
+  document.getElementById('stat-products').textContent = state.products.length;
+  document.getElementById('stat-companies').textContent = state.companies.length;
+  document.getElementById('stat-orders').textContent = state.orders.length;
+  const rev = state.payments.filter(p => p.type === 'seller').length * 999;
+  document.getElementById('stat-revenue').textContent = `ETB ${rev.toLocaleString()}`;
+}
+function updateSupplierDropdown() {
+  const sel = document.getElementById('np-supplier');
+  if (!sel) return;
+  sel.innerHTML = state.companies.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+}
+function addProduct() {
+  const name = document.getElementById('np-name').value.trim();
+  const price = parseFloat(document.getElementById('np-price').value);
+  if (!name || !price) return showNotif('⚠️ Name and price are required');
+  state.products.push({
+    id: ++state.nextId,
+    name,
+    category: document.getElementById('np-cat').value,
+    price,
+    stock: parseInt(document.getElementById('np-stock').value) || 0,
+    supplier: document.getElementById('np-supplier').value,
+    description: document.getElementById('np-desc').value || 'Quality pharmaceutical product',
+    verified: true,
+  });
+  ['np-name','np-price','np-stock','np-desc'].forEach(id => document.getElementById(id).value = '');
+  showNotif('✓ Product added to marketplace!');
+  refreshAdminStats();
+  renderAdminProducts();
+}
+function addCompany() {
+  const name = document.getElementById('nc-name').value.trim();
+  if (!name) return showNotif('⚠️ Company name is required');
+  state.companies.push({
+    id: ++state.nextId,
+    name,
+    location: document.getElementById('nc-location').value || 'Ethiopia',
+    phone: document.getElementById('nc-phone').value || '+251911000000',
+    specialty: document.getElementById('nc-specialty').value || 'General Pharmaceuticals',
+    verified: true, products: 0, rating: 5.0,
+  });
+  ['nc-name','nc-location','nc-phone','nc-specialty'].forEach(id => document.getElementById(id).value = '');
+  showNotif('✓ Company added!');
+  refreshAdminStats();
+  renderAdminCompanies();
+}
+function deleteProduct(id) {
+  state.products = state.products.filter(p => p.id !== id);
+  renderAdminProducts(); refreshAdminStats(); showNotif('Product removed');
+}
+function deleteCompany(id) {
+  state.companies = state.companies.filter(c => c.id !== id);
+  renderAdminCompanies(); refreshAdminStats(); showNotif('Company removed');
+}
+function renderAdminProducts() {
+  const el = document.getElementById('admin-products-list');
+  if (!el) return;
+  el.innerHTML = state.products.map(p => `
+    <div class="admin-list-item">
+      <div class="item-info"><h4>${p.name}</h4><p>${p.category} · ${p.supplier} · ETB ${p.price.toLocaleString()}</p></div>
+      <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+    </div>
+  `).join('') || '<div class="empty"><p>No products yet</p></div>';
+}
+function renderAdminCompanies() {
+  const el = document.getElementById('admin-companies-list');
+  if (!el) return;
+  el.innerHTML = state.companies.map(c => `
+    <div class="admin-list-item">
+      <div class="item-info"><h4>${c.name}</h4><p>${c.location} · ${c.specialty} · ${c.phone}</p></div>
+      <button class="delete-btn" onclick="deleteCompany(${c.id})">Delete</button>
+    </div>
+  `).join('') || '<div class="empty"><p>No companies yet</p></div>';
+}
+function renderPayments() {
+  const el = document.getElementById('payments-list');
+  if (!el) return;
+  if (!state.payments.length) { el.innerHTML = '<div class="empty"><p>No payment submissions yet</p></div>'; return; }
+  el.innerHTML = state.payments.map((p, i) => `
+    <div class="admin-list-item">
+      <div class="item-info">
+        <h4>${p.name} (${p.type})</h4>
+        <p>Phone: ${p.phone} · Ref: ${p.ref} · ${p.date}</p>
+      </div>
+      <span style="font-size:12px;padding:4px 10px;border-radius:20px;background:${p.status==='approved'?'#d1fae5':'#fff3cd'};color:${p.status==='approved'?'var(--success)':'#856404'};font-weight:600">${p.status}</span>
+    </div>
+  `).join('');
+}
+function renderPendingPayments() {
+  const el = document.getElementById('pending-payments');
+  const pending = state.payments.filter(p => p.status === 'pending');
+  if (!pending.length) { el.innerHTML = '<div class="empty"><p style="font-size:14px">No pending approvals 🎉</p></div>'; return; }
+  el.innerHTML = pending.map((p, i) => `
+    <div class="admin-list-item">
+      <div class="item-info"><h4>${p.name}</h4><p>${p.type} · ${p.phone} · Ref: ${p.ref}</p></div>
+      <button class="btn-sm btn-sm-teal" onclick="approvePayment(${i})">Approve</button>
+    </div>
+  `).join('');
+}
+function approvePayment(i) {
+  state.payments[i].status = 'approved';
+  renderPendingPayments(); renderPayments(); refreshAdminStats(); showNotif('✓ Payment approved');
+}
+
+// ============ NOTIFICATIONS ============
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
+
+
+// ============ PAYMENT SETTINGS ============
+function savePaymentDetails() {
+  const number = document.getElementById('s-pay-number').value.trim();
+  const method = document.getElementById('s-pay-method').value.trim();
+  const amount = document.getElementById('s-pay-amount').value.trim();
+  if (!number) return showNotif('⚠️ Please enter a payment number');
+  if (number) state.paymentNumber = number;
+  if (method) state.paymentMethod = method;
+  if (amount) state.listingFee = parseInt(amount);
+  // Update previews
+  document.getElementById('preview-number').textContent = state.paymentNumber;
+  document.getElementById('preview-method').textContent = state.paymentMethod;
+  if (amount) document.getElementById('preview-amount').textContent = amount;
+  // Update seller paywall live
+  const sn = document.getElementById('sell-number');
+  const sm = document.getElementById('sell-method');
+  const sa = document.getElementById('sell-amount');
+  if (sn) sn.textContent = state.paymentNumber;
+  if (sm) sm.textContent = state.paymentMethod;
+  if (sa) sa.textContent = 'ETB ' + (state.listingFee || 999);
+  // Show success
+  const el = document.getElementById('pay-success');
+  el.textContent = '✓ Payment details updated! Sellers will now see: ' + state.paymentNumber;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+  showNotif('✓ Payment details saved!');
+}
+
+// ============ SETTINGS ============
+function changePassword() {
+  const current = document.getElementById('s-current').value;
+  const newPw = document.getElementById('s-new').value;
+  const confirm = document.getElementById('s-confirm').value;
+  const errEl = document.getElementById('s-error');
+  const sucEl = document.getElementById('s-success');
+  errEl.style.display = 'none';
+  sucEl.style.display = 'none';
+
+  if (current !== state.adminPassword) {
+    errEl.textContent = '✕ Current password is incorrect';
+    errEl.style.display = 'block'; return;
+  }
+  if (newPw.length < 6) {
+    errEl.textContent = '✕ New password must be at least 6 characters';
+    errEl.style.display = 'block'; return;
+  }
+  if (newPw !== confirm) {
+    errEl.textContent = '✕ Passwords do not match';
+    errEl.style.display = 'block'; return;
+  }
+  state.adminPassword = newPw;
+  document.getElementById('s-current').value = '';
+  document.getElementById('s-new').value = '';
+  document.getElementById('s-confirm').value = '';
+  document.getElementById('show-current-pw').textContent = '••••••••';
+  sucEl.textContent = '✓ Password updated successfully! Use your new password next time you login.';
+  sucEl.style.display = 'block';
+  showNotif('✓ Password changed successfully!');
+}
+
+function toggleShowPw() {
+  const el = document.getElementById('show-current-pw');
+  const btn = document.getElementById('pw-toggle-btn');
+  if (el.textContent === '••••••••') {
+    el.textContent = state.adminPassword;
+    btn.textContent = 'Hide';
+  } else {
+    el.textContent = '••••••••';
+    btn.textContent = 'Show';
+  }
+}
+</script>
+</body>
+</html>
