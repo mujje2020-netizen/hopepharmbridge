@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0b2545"/>
+<meta name="description" content="HopePharm Bridge - Ethiopia's Trusted Pharma Network"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="HopePharm"/>
+<link rel="manifest" href="manifest.json"/>
+<title>HopePharm Bridge 🌿</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--navy:#0b2545;--teal:#0e7c7b;--gold:#e8a020;--light:#f4f7fb;--muted:#607d9a;--border:#dce6f0;--danger:#c0392b;--success:#1e8c5a;--shadow:0 4px 24px rgba(11,37,69,0.10);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--navy);min-height:100vh;}
+.page{display:none;min-height:100vh;flex-direction:column;}
+.page.active{display:flex;}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-bottom:10px;}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted);}
+.btn-sm{padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-sm-teal{background:var(--teal);color:#fff;}
+.btn-sm-wa{background:#25d366;color:#fff;}
+.btn-sm-gold{background:var(--gold);color:#fff;}
+.btn-sm-danger{background:#fee;color:var(--danger);}
+.form-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;font-family:'DM Sans',sans-serif;background:#fff;color:var(--navy);}
+.form-input:focus{border-color:var(--teal);}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
+.form-group{margin-bottom:14px;}
+.form-card{background:#fff;border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--border);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.app-header{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.header-brand h1{font-family:'Playfair Display',serif;font-size:17px;}
+.header-brand small{display:block;font-size:9px;opacity:0.55;letter-spacing:1.5px;text-transform:uppercase;}
+.icon-btn{background:rgba(255,255,255,0.12);border:none;color:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12px;font-weight:600;}
+.nav-tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent;font-weight:500;}
+.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:700;}
+.admin-tab{padding:12px 16px;border:none;background:none;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent;font-weight:500;}
+.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700;}
+.card{background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:12px;}
+.tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;display:inline-block;}
+.tag-teal{background:#e6f4f4;color:var(--teal);}
+.tag-green{background:#d1fae5;color:var(--success);}
+.tag-red{background:#fee;color:var(--danger);}
+.tag-yellow{background:#fff3cd;color:#856404;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(11,37,69,0.75);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:24px 18px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 18px;}
+.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.3);opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;max-width:90vw;}
+.notif.show{opacity:1;}
+.stat-card{background:#fff;border-radius:12px;padding:16px;box-shadow:var(--shadow);text-align:center;border:1px solid var(--border);}
+.content-area{padding:16px;flex:1;overflow-y:auto;}
+/* Loading spinner */
+.loader{display:flex;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:12px;color:var(--muted);font-size:13px;}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fadeUp{animation:fadeUp 0.45s ease forwards;}
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+
+<!-- LOADING SCREEN -->
+<div id="page-loading" class="page active" style="background:linear-gradient(160deg,#0b2545,#0e7c7b);align-items:center;justify-content:center;">
+  <div style="text-align:center;color:#fff;">
+    <div style="font-size:56px;margin-bottom:16px;animation:bounce 1.5s infinite;">🌿</div>
+    <div style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:8px;">HopePharm Bridge</div>
+    <div style="font-size:12px;opacity:0.6;letter-spacing:2px;margin-bottom:24px;">LOADING...</div>
+    <div class="spinner" style="margin:0 auto;border-top-color:#fff;border-color:rgba(255,255,255,0.3);"></div>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="page-welcome" class="page" style="background:linear-gradient(160deg,#0b2545 0%,#0e7c7b 65%,#1e8c5a 100%);align-items:center;justify-content:center;padding:28px 20px;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.04)"></div>
+  <div style="position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.04)"></div>
+  <div style="position:relative;z-index:2;max-width:400px;width:100%;" class="fadeUp">
+    <div onclick="secretTap()" style="font-size:60px;margin-bottom:10px;animation:bounce 2.5s infinite;cursor:default;user-select:none;">🌿</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:32px;color:#fff;margin-bottom:6px;line-height:1.2;">HopePharm<br>Bridge</h1>
+    <p style="color:rgba(255,255,255,0.6);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;">Ethiopia's Trusted Pharma Network</p>
+    <div style="width:48px;height:3px;background:var(--gold);border-radius:3px;margin:0 auto 26px;"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;">
+      <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);">✓ Verified Suppliers</span>
+      <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);">✓ Direct WhatsApp</span>
+      <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);">✓ Live Updates</span>
+    </div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-bottom:32px;">
+      <div><div style="font-size:24px;font-weight:700;color:#fff;" id="w-prods">-</div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Products</div></div>
+      <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+      <div><div style="font-size:24px;font-weight:700;color:#fff;" id="w-comps">-</div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Suppliers</div></div>
+      <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+      <div><div style="font-size:24px;font-weight:700;color:#fff;">100%</div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Verified</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <button onclick="goTo('page-buyer')" style="background:#fff;color:var(--navy);border:none;border-radius:14px;padding:22px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.15);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <div style="font-size:32px;margin-bottom:8px;">🛒</div>
+        <div style="font-weight:700;font-size:15px;">Buyer</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Browse & contact</div>
+        <div style="margin-top:10px;background:var(--success);color:#fff;font-size:10px;padding:3px 10px;border-radius:20px;display:inline-block;font-weight:700;">FREE</div>
+      </button>
+      <button onclick="goTo('page-seller-welcome')" style="background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:14px;padding:22px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        <div style="font-size:32px;margin-bottom:8px;">🏭</div>
+        <div style="font-weight:700;font-size:15px;">Seller</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:4px;">List your products</div>
+        <div style="margin-top:10px;background:var(--gold);color:#fff;font-size:10px;padding:3px 10px;border-radius:20px;display:inline-block;font-weight:700;">LISTING FEE</div>
+      </button>
+    </div>
+    <div id="install-banner" style="display:none;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:12px;padding:12px 16px;align-items:center;justify-content:space-between;gap:10px;">
+      <div style="font-size:13px;color:#fff;text-align:left;"><strong>📲 Install App</strong><br><span style="font-size:11px;opacity:0.8;">Add to your home screen</span></div>
+      <button onclick="installApp()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:12px;cursor:pointer;">Install</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUYER PAGE -->
+<div id="page-buyer" class="page">
+  <div class="app-header">
+    <div class="header-brand"><span style="font-size:20px;">🌿</span><div><h1>HopePharm Bridge</h1><small>Buyer Marketplace</small></div></div>
+    <div style="display:flex;gap:8px;">
+      <button class="icon-btn" onclick="toggleCart()">🛒<span id="cart-badge" style="display:none;background:var(--gold);color:#fff;border-radius:50%;padding:1px 5px;font-size:10px;margin-left:3px;">0</span></button>
+      <button class="icon-btn" onclick="goTo('page-welcome')">← Back</button>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="buyerTab('products',this)">💊 Products</button>
+    <button class="nav-tab" onclick="buyerTab('suppliers',this)">🏭 Suppliers</button>
+    <button class="nav-tab" onclick="buyerTab('orders',this)">📋 My Orders</button>
+  </div>
+  <div class="content-area">
+    <div id="bt-products">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <input class="form-input" id="search" placeholder="🔍 Search products..." oninput="renderProducts()" style="flex:1;min-width:180px;"/>
+        <select class="form-input" id="cat-filter" onchange="renderProducts()" style="max-width:150px;"><option value="">All</option></select>
+      </div>
+      <div id="products-list"></div>
+    </div>
+    <div id="bt-suppliers" style="display:none;"><div id="suppliers-list"></div></div>
+    <div id="bt-orders" style="display:none;"><div id="orders-list"></div></div>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cart-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;">🛒 Your Order</div>
+      <button onclick="toggleCart()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <div id="cart-items"></div>
+    <div id="cart-total" style="font-size:17px;font-weight:700;padding:12px 0;"></div>
+    <button class="btn btn-teal" onclick="placeOrder()">✓ Place Order</button>
+    <button class="btn btn-outline" onclick="toggleCart()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- SELLER WELCOME -->
+<div id="page-seller-welcome" class="page" style="background:linear-gradient(160deg,#0b2545,#1e8c5a);align-items:center;justify-content:center;padding:28px 20px;text-align:center;">
+  <div style="max-width:400px;width:100%;" class="fadeUp">
+    <div style="font-size:52px;margin-bottom:12px;">🏭</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:26px;color:#fff;margin-bottom:8px;">Sell on HopePharm Bridge</h1>
+    <p style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:24px;">Reach thousands of verified buyers across Ethiopia</p>
+    <div style="background:rgba(255,255,255,0.1);border-radius:14px;padding:20px;margin-bottom:22px;text-align:left;">
+      <div style="color:#fff;font-size:13px;line-height:2.4;">
+        <div>✓ Listed as a verified supplier instantly</div>
+        <div>✓ Buyers contact you directly on WhatsApp</div>
+        <div>✓ Your products visible to all buyers live</div>
+        <div>✓ Admin approves within 24 hours</div>
+      </div>
+    </div>
+    <button onclick="goTo('page-seller-register')" style="width:100%;padding:16px;background:#fff;color:var(--navy);border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px;">Get Listed Now →</button>
+    <button onclick="goTo('page-welcome')" style="width:100%;padding:13px;background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);border-radius:14px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;">← Go Back</button>
+  </div>
+</div>
+
+<!-- SELLER REGISTER -->
+<div id="page-seller-register" class="page">
+  <div class="app-header">
+    <div class="header-brand"><span style="font-size:20px;">🌿</span><div><h1>Register Company</h1><small>HopePharm Bridge</small></div></div>
+    <button class="icon-btn" onclick="goTo('page-seller-welcome')">← Back</button>
+  </div>
+  <div class="content-area">
+    <div class="form-card">
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:4px;">Company Details</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Tell us about your company</div>
+      <div class="form-group"><label class="form-label">Company Name *</label><input class="form-input" id="reg-company" placeholder="e.g. EthioPharm Ltd"/></div>
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-input" id="reg-type"><option>Pharmaceutical Company</option><option>Hospital</option><option>Clinic</option><option>Government Organisation</option><option>NGO / Non-profit</option><option>Distributor</option><option>Other</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Location *</label><input class="form-input" id="reg-location" placeholder="e.g. Addis Ababa"/></div>
+        <div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" id="reg-phone" placeholder="+251911..."/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Specialty</label><input class="form-input" id="reg-specialty" placeholder="e.g. Antibiotics, Vaccines..."/></div>
+    </div>
+    <div class="form-card">
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:4px;">First Product</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Add your first product</div>
+      <div class="form-group"><label class="form-label">Product Name *</label><input class="form-input" id="reg-prod-name" placeholder="e.g. Amoxicillin 500mg"/></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Category</label><input class="form-input" id="reg-prod-cat" placeholder="e.g. Antibiotics"/></div>
+        <div class="form-group"><label class="form-label">Price (ETB) *</label><input class="form-input" id="reg-prod-price" placeholder="e.g. 450" type="number"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Stock (units)</label><input class="form-input" id="reg-prod-stock" placeholder="e.g. 500" type="number"/></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-input" id="reg-prod-status"><option value="available">✅ Available</option><option value="low">⚠️ Low Stock</option><option value="stockout">❌ Stock Out</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="reg-prod-desc" placeholder="Brief description"/></div>
+    </div>
+    <button class="btn btn-teal" onclick="proceedToPayment()">Continue to Payment →</button>
+  </div>
+</div>
+
+<!-- SELLER PAYMENT -->
+<div id="page-seller-payment" class="page" style="background:linear-gradient(160deg,#0b2545,#0e7c7b);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:28px 22px;max-width:420px;width:100%;">
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:40px;margin-bottom:8px;">💳</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:4px;">Listing Fee Payment</h2>
+      <p style="color:var(--muted);font-size:13px;">Pay to get listed on HopePharm Bridge</p>
+    </div>
+    <div style="background:#f0faf4;border:1.5px solid #b7e4c7;border-radius:12px;padding:18px;margin-bottom:18px;">
+      <div style="font-weight:700;color:var(--navy);margin-bottom:10px;font-size:14px;">📋 Payment Instructions</div>
+      <div style="font-size:14px;color:var(--navy);line-height:2.4;">
+        <div>💰 Amount: <strong id="pay-show-amount">Loading...</strong>/month</div>
+        <div>📱 Method: <strong id="pay-show-method">Loading...</strong></div>
+        <div>📞 Send to: <strong id="pay-show-number" style="color:var(--teal);font-size:16px;">Loading...</strong></div>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Payment Reference / TxID *</label><input class="form-input" id="pay-ref" placeholder="Enter transaction ID"/></div>
+    <div class="form-group"><label class="form-label">Your Phone Number</label><input class="form-input" id="pay-phone-confirm" placeholder="Your phone number"/></div>
+    <div id="pay-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;display:none;"></div>
+    <button class="btn btn-teal" onclick="submitSellerPayment()">✓ Submit & Register</button>
+    <button onclick="goTo('page-seller-register')" class="btn btn-outline">← Go Back</button>
+  </div>
+</div>
+
+<!-- SELLER SUCCESS -->
+<div id="page-seller-success" class="page" style="background:linear-gradient(160deg,#0b2545,#1e8c5a);align-items:center;justify-content:center;padding:28px 20px;text-align:center;">
+  <div style="max-width:380px;width:100%;" class="fadeUp">
+    <div style="font-size:64px;margin-bottom:14px;">🎉</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#fff;margin-bottom:10px;">Submission Received!</h2>
+    <p style="color:rgba(255,255,255,0.75);font-size:14px;line-height:1.7;margin-bottom:24px;">Your company & payment have been submitted. Admin will review within <strong style="color:var(--gold);">24 hours.</strong></p>
+    <button onclick="goTo('page-welcome')" style="width:100%;padding:15px;background:#fff;color:var(--navy);border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="page-admin-login" class="page" style="background:linear-gradient(135deg,#0b2545,#0e7c7b);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:36px 26px;max-width:380px;width:100%;">
+    <div style="text-align:center;margin-bottom:26px;">
+      <div style="font-size:42px;margin-bottom:8px;">🔐</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:4px;">Admin Access</h2>
+      <p style="color:var(--muted);font-size:13px;">HopePharm Bridge Control Panel</p>
+    </div>
+    <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="admin-user" placeholder="admin" autocomplete="off"/></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="admin-pass" placeholder="Enter password"/></div>
+    <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:12px;text-align:center;display:none;padding:8px;background:#fee;border-radius:8px;"></div>
+    <button class="btn btn-navy" onclick="adminLogin()">Login to Dashboard</button>
+    <button onclick="goTo('page-welcome')" class="btn btn-outline">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="page-admin" class="page">
+  <div class="app-header">
+    <div class="header-brand"><span style="font-size:18px;">⚙️</span><div><h1>Admin Dashboard</h1><small>HopePharm Bridge</small></div></div>
+    <button class="icon-btn" onclick="adminLogout()">Logout</button>
+  </div>
+  <div style="background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;">
+    <button class="admin-tab active" onclick="adminTab('overview',this)">📊 Overview</button>
+    <button class="admin-tab" onclick="adminTab('products',this)">💊 Products</button>
+    <button class="admin-tab" onclick="adminTab('companies',this)">🏭 Companies</button>
+    <button class="admin-tab" onclick="adminTab('payments',this)">💳 Payments</button>
+    <button class="admin-tab" onclick="adminTab('features',this)">💡 Features</button>
+    <button class="admin-tab" onclick="adminTab('settings',this)">⚙️ Settings</button>
+  </div>
+  <div class="content-area">
+    <!-- OVERVIEW -->
+    <div id="at-overview">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+        <div class="stat-card"><div style="font-size:24px;margin-bottom:4px;">💊</div><div style="font-size:22px;font-weight:700;" id="s-prods">-</div><div style="font-size:11px;color:var(--muted);">Products</div></div>
+        <div class="stat-card"><div style="font-size:24px;margin-bottom:4px;">🏭</div><div style="font-size:22px;font-weight:700;" id="s-comps">-</div><div style="font-size:11px;color:var(--muted);">Companies</div></div>
+        <div class="stat-card"><div style="font-size:24px;margin-bottom:4px;">🛒</div><div style="font-size:22px;font-weight:700;" id="s-ords">-</div><div style="font-size:11px;color:var(--muted);">Orders</div></div>
+        <div class="stat-card"><div style="font-size:24px;margin-bottom:4px;">💰</div><div style="font-size:15px;font-weight:700;" id="s-rev">-</div><div style="font-size:11px;color:var(--muted);">Revenue</div></div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:12px;">⏳ Pending Approvals</div>
+      <div id="pending-list"></div>
+    </div>
+    <!-- PRODUCTS -->
+    <div id="at-products" style="display:none;">
+      <div class="form-card">
+        <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:14px;">➕ Add New Product</div>
+        <div class="form-group"><label class="form-label">Product Name *</label><input class="form-input" id="np-name" placeholder="e.g. Amoxicillin 500mg"/></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Category</label><input class="form-input" id="np-cat" placeholder="Type category..."/></div>
+          <div class="form-group"><label class="form-label">Price (ETB) *</label><input class="form-input" id="np-price" placeholder="e.g. 450" type="number"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Stock (units)</label><input class="form-input" id="np-stock" placeholder="e.g. 500" type="number"/></div>
+          <div class="form-group"><label class="form-label">Status</label>
+            <select class="form-input" id="np-status"><option value="available">✅ Available</option><option value="low">⚠️ Low Stock</option><option value="stockout">❌ Stock Out</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Supplier</label><select class="form-input" id="np-supplier"></select></div>
+        <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="np-desc" placeholder="Brief description"/></div>
+        <button class="btn btn-teal" onclick="addProduct()">➕ Add Product</button>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:12px;">All Products</div>
+      <div id="admin-prod-list"></div>
+    </div>
+    <!-- COMPANIES -->
+    <div id="at-companies" style="display:none;">
+      <div class="form-card">
+        <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:14px;">🏭 Add Company / Organisation</div>
+        <div class="form-group"><label class="form-label">Name *</label><input class="form-input" id="nc-name" placeholder="e.g. EthioPharm Ltd"/></div>
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-input" id="nc-type"><option>Pharmaceutical Company</option><option>Hospital</option><option>Clinic</option><option>Government Organisation</option><option>NGO / Non-profit</option><option>Distributor</option><option>Other</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="nc-location" placeholder="e.g. Addis Ababa"/></div>
+          <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="nc-phone" placeholder="+251911..."/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Specialty</label><input class="form-input" id="nc-specialty" placeholder="e.g. Antibiotics"/></div>
+        <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="nc-desc" placeholder="Optional notes"/></div>
+        <button class="btn btn-teal" onclick="addCompany()">🏭 Add to Directory</button>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:12px;">All Companies</div>
+      <div id="admin-comp-list"></div>
+    </div>
+    <!-- PAYMENTS -->
+    <div id="at-payments" style="display:none;">
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:12px;">💳 Payment Submissions</div>
+      <div id="admin-pay-list"></div>
+    </div>
+    <!-- FEATURES -->
+    <div id="at-features" style="display:none;">
+      <div class="form-card" style="background:linear-gradient(135deg,#0b2545,#0e7c7b);border:none;">
+        <div style="color:#fff;font-family:'Playfair Display',serif;font-size:17px;margin-bottom:6px;">💡 Add Feature Request</div>
+        <div style="color:rgba(255,255,255,0.7);font-size:12px;margin-bottom:16px;">Track features customers recommend</div>
+        <div class="form-group"><label class="form-label" style="color:rgba(255,255,255,0.7);">Feature Title</label><input class="form-input" id="feat-title" placeholder="e.g. Add delivery tracking"/></div>
+        <div class="form-group"><label class="form-label" style="color:rgba(255,255,255,0.7);">Description</label><input class="form-input" id="feat-desc" placeholder="What should it do?"/></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" style="color:rgba(255,255,255,0.7);">Requested by</label><input class="form-input" id="feat-by" placeholder="Name or Anonymous"/></div>
+          <div class="form-group"><label class="form-label" style="color:rgba(255,255,255,0.7);">Priority</label>
+            <select class="form-input" id="feat-priority"><option>🔴 High</option><option>🟡 Medium</option><option>🟢 Low</option></select>
+          </div>
+        </div>
+        <button onclick="addFeature()" style="width:100%;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;">➕ Save Feature Request</button>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:12px;">📋 Feature Requests</div>
+      <div id="features-list"></div>
+    </div>
+    <!-- SETTINGS -->
+    <div id="at-settings" style="display:none;">
+      <div class="form-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <div style="width:42px;height:42px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔐</div>
+          <div><div style="font-weight:700;font-size:14px;">Change Password</div><div style="font-size:12px;color:var(--muted);">Saved to Firebase — works everywhere</div></div>
+        </div>
+        <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" id="s-cur" placeholder="Current password"/></div>
+        <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" id="s-new" placeholder="Min 6 characters"/></div>
+        <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" id="s-con" placeholder="Repeat new password"/></div>
+        <div id="pw-msg" style="font-size:13px;margin-bottom:10px;display:none;padding:10px;border-radius:8px;"></div>
+        <button class="btn btn-teal" onclick="changePassword()">🔒 Update Password</button>
+      </div>
+      <div class="form-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+          <div style="width:42px;height:42px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💳</div>
+          <div><div style="font-weight:700;font-size:14px;">Payment Collection</div><div style="font-size:12px;color:var(--muted);">Saved to Firebase — updates live for all</div></div>
+        </div>
+        <div class="form-group"><label class="form-label">Your Payment Number</label><input class="form-input" id="s-paynum" placeholder="e.g. 0911 000 000"/></div>
+        <div class="form-group"><label class="form-label">Payment Method</label><input class="form-input" id="s-paymethod" placeholder="e.g. CBE Birr / Telebirr"/></div>
+        <div class="form-group"><label class="form-label">Listing Fee (ETB)</label><input class="form-input" id="s-payamount" placeholder="e.g. 999" type="number"/></div>
+        <div style="background:#f0faf4;border:1.5px solid #b7e4c7;border-radius:10px;padding:14px;margin-bottom:14px;">
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px;">👁️ Preview for sellers:</div>
+          <div style="font-size:13px;line-height:2.1;">Amount: <strong id="prev-amount">-</strong>/mo<br>Method: <strong id="prev-method">-</strong><br>Number: <strong id="prev-number" style="color:var(--teal);">-</strong></div>
+        </div>
+        <div id="pay-save-msg" style="font-size:13px;margin-bottom:10px;display:none;color:var(--success);font-weight:600;"></div>
+        <button class="btn btn-teal" onclick="savePaymentSettings()">💾 Save Payment Details</button>
+      </div>
+      <div class="form-card">
+        <div style="font-weight:700;margin-bottom:14px;">🌿 App Info</div>
+        <div style="font-size:13px;color:var(--muted);line-height:2.6;">
+          <div>📱 App: <strong style="color:var(--navy);">HopePharm Bridge</strong></div>
+          <div>🔥 Database: <strong style="color:var(--success);">Firebase Connected ✓</strong></div>
+          <div>👤 Username: <strong style="color:var(--navy);">admin</strong></div>
+          <div>🔑 Password: <strong id="show-pw" style="color:var(--navy);">••••••••</strong> <span onclick="togglePw()" style="color:var(--teal);cursor:pointer;font-size:12px;" id="pw-toggle-btn">Show</span></div>
+          <div>🔓 Secret: <strong style="color:var(--navy);">Tap 🌿 logo 5× on home</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="edit-prod-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;">✏️ Edit Product</div>
+    <input type="hidden" id="ep-id"/>
+    <div class="form-group"><label class="form-label">Product Name</label><input class="form-input" id="ep-name"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Category</label><input class="form-input" id="ep-cat"/></div>
+      <div class="form-group"><label class="form-label">Price (ETB)</label><input class="form-input" id="ep-price" type="number"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Stock (units)</label><input class="form-input" id="ep-stock" type="number"/></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-input" id="ep-status"><option value="available">✅ Available</option><option value="low">⚠️ Low Stock</option><option value="stockout">❌ Stock Out</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="ep-desc"/></div>
+    <button class="btn btn-teal" onclick="saveProduct()">💾 Save Changes</button>
+    <button class="btn btn-outline" onclick="closeModal('edit-prod-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT COMPANY MODAL -->
+<div class="modal-overlay" id="edit-comp-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:16px;">✏️ Edit Company</div>
+    <input type="hidden" id="ec-id"/>
+    <div class="form-group"><label class="form-label">Company Name</label><input class="form-input" id="ec-name"/></div>
+    <div class="form-group"><label class="form-label">Type</label>
+      <select class="form-input" id="ec-type"><option>Pharmaceutical Company</option><option>Hospital</option><option>Clinic</option><option>Government Organisation</option><option>NGO / Non-profit</option><option>Distributor</option><option>Other</option></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ec-location"/></div>
+      <div class="form-group"><label class="form-label">WhatsApp</label><input class="form-input" id="ec-phone"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Specialty</label><input class="form-input" id="ec-specialty"/></div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="ec-desc"/></div>
+    <button class="btn btn-teal" onclick="saveCompany()">💾 Save Changes</button>
+    <button class="btn btn-outline" onclick="closeModal('edit-comp-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDhvbwGWZso8Kn-QxfD4is8yFlfIvlerfM",
+  authDomain: "hopepharmbridge.firebaseapp.com",
+  projectId: "hopepharmbridge",
+  storageBucket: "hopepharmbridge.firebasestorage.app",
+  messagingSenderId: "129859365626",
+  appId: "1:129859365626:web:ea017b9f6c7b6a0bfe7743"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ── COLLECTIONS ──
+const PRODS = 'products';
+const COMPS = 'companies';
+const PAYS  = 'payments';
+const FEATS = 'features';
+const SETT  = 'settings';
+const ORDS  = 'orders';
+
+// ── LOCAL CACHE ──
+let products = [];
+let companies = [];
+let payments = [];
+let features = [];
+let orders = [];
+let settings = { adminPw:'medmarket2024', payNumber:'0911 000 000', payMethod:'CBE Birr / Telebirr', listingFee:999 };
+let cart = [];
+let tempSeller = {};
+let deferredInstall = null;
+
+// ── HELPERS ──
+function v(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
+function sv(id,val){ const e=document.getElementById(id); if(e)e.value=val; }
+function si(id,val){ const e=document.getElementById(id); if(e)e.textContent=val; }
+function showNotif(msg){ const n=document.getElementById('notif'); n.textContent=msg; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'),2800); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function stockTag(p){
+  if(p.status==='stockout'||p.stock==0) return '<span class="tag tag-red">❌ Stock Out</span>';
+  if(p.status==='low'||p.stock<200) return '<span class="tag tag-yellow">⚠️ Low Stock</span>';
+  return '<span class="tag tag-green">✅ Available</span>';
+}
+
+// ── INIT: Load settings & seed data ──
+async function init(){
+  try {
+    // Load settings
+    const settDoc = await getDoc(doc(db, SETT, 'main'));
+    if(settDoc.exists()){ Object.assign(settings, settDoc.data()); }
+    else {
+      // First time - seed settings
+      await setDoc(doc(db, SETT, 'main'), settings);
+      // Seed sample data
+      await seedData();
+    }
+    // Start live listeners
+    startListeners();
+  } catch(e){
+    console.error('Firebase error:',e);
+    showNotif('⚠️ Connection error. Check internet.');
+    goTo('page-welcome');
+  }
+}
+
+async function seedData(){
+  const sampleComps = [
+    {name:"EthioPharm Ltd",type:"Pharmaceutical Company",location:"Addis Ababa",phone:"+251911100001",specialty:"Antibiotics & Vaccines",desc:"Leading pharma supplier",verified:true,rating:4.8},
+    {name:"AddisRx Supply",type:"Distributor",location:"Addis Ababa",phone:"+251911100002",specialty:"Chronic Disease Meds",desc:"Wide range of medications",verified:true,rating:4.9},
+    {name:"CardioMed Ethiopia",type:"Pharmaceutical Company",location:"Hawassa",phone:"+251911100003",specialty:"Cardiovascular",desc:"Heart medications specialist",verified:true,rating:4.7},
+    {name:"RespiCare Ethiopia",type:"Pharmaceutical Company",location:"Dire Dawa",phone:"+251911100004",specialty:"Respiratory",desc:"Respiratory drugs and inhalers",verified:true,rating:4.9},
+  ];
+  const compRefs = {};
+  for(const c of sampleComps){
+    const ref = await addDoc(collection(db,COMPS), {...c, createdAt:serverTimestamp()});
+    compRefs[c.name] = ref.id;
+  }
+  const sampleProds = [
+    {name:"Amoxicillin 500mg",category:"Antibiotics",supplier:"EthioPharm Ltd",price:680,stock:500,status:"available",verified:true,description:"Broad-spectrum antibiotic"},
+    {name:"Metformin 850mg",category:"Diabetes",supplier:"AddisRx Supply",price:480,stock:120,status:"low",verified:true,description:"First-line diabetes medication"},
+    {name:"Atorvastatin 20mg",category:"Cardiovascular",supplier:"CardioMed Ethiopia",price:870,stock:0,status:"stockout",verified:true,description:"Statin for cholesterol"},
+    {name:"Salbutamol Inhaler",category:"Respiratory",supplier:"RespiCare Ethiopia",price:330,stock:350,status:"available",verified:true,description:"Bronchodilator for asthma"},
+    {name:"Paracetamol 500mg",category:"Analgesics",supplier:"AddisRx Supply",price:270,stock:5000,status:"available",verified:true,description:"Pain relief and fever reduction"},
+  ];
+  for(const p of sampleProds){ await addDoc(collection(db,PRODS), {...p, createdAt:serverTimestamp()}); }
+}
+
+// ── LIVE LISTENERS (real-time updates) ──
+function startListeners(){
+  // Products - live
+  onSnapshot(collection(db,PRODS), snap=>{
+    products = snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateWelcomeStats();
+    if(document.getElementById('bt-products').style.display!=='none') renderProducts();
+    if(document.getElementById('at-products')?.style.display!=='none') renderAdminProds();
+  });
+  // Companies - live
+  onSnapshot(collection(db,COMPS), snap=>{
+    companies = snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateWelcomeStats();
+    if(document.getElementById('bt-suppliers').style.display!=='none') renderSuppliers();
+    if(document.getElementById('at-companies')?.style.display!=='none') renderAdminComps();
+    updateSupDrop();
+  });
+  // Payments - live
+  onSnapshot(collection(db,PAYS), snap=>{
+    payments = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(document.getElementById('at-payments')?.style.display!=='none') renderAdminPays();
+    if(document.getElementById('at-overview')?.style.display!=='none') renderPending();
+    refreshStats();
+  });
+  // Features - live
+  onSnapshot(collection(db,FEATS), snap=>{
+    features = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(document.getElementById('at-features')?.style.display!=='none') renderFeatures();
+  });
+  // Orders - live
+  onSnapshot(collection(db,ORDS), snap=>{
+    orders = snap.docs.map(d=>({id:d.id,...d.data()}));
+    refreshStats();
+    if(document.getElementById('bt-orders').style.display!=='none') renderOrders();
+  });
+  // Settings - live
+  onSnapshot(doc(db,SETT,'main'), snap=>{
+    if(snap.exists()) Object.assign(settings, snap.data());
+    updatePayDisplay();
+    updateSettingsPreview();
+  });
+  // Go to welcome after loading
+  goTo('page-welcome');
+}
+
+// ── PWA INSTALL ──
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredInstall=e;
+  document.getElementById('install-banner').style.display='flex';
+});
+window.installApp = function(){
+  if(deferredInstall){ deferredInstall.prompt(); deferredInstall.userChoice.then(()=>{ deferredInstall=null; document.getElementById('install-banner').style.display='none'; }); }
+};
+
+// ── SECRET ADMIN ──
+let tapN=0, tapT=null;
+window.secretTap = function(){
+  tapN++; clearTimeout(tapT);
+  tapT = setTimeout(()=>{tapN=0;}, 2000);
+  if(tapN>=5){ tapN=0; goTo('page-admin-login'); }
+};
+
+// ── NAVIGATION ──
+window.goTo = function(id){
+  document.querySelectorAll('.page').forEach(p=>{ p.classList.remove('active'); p.style.display='none'; });
+  const pg = document.getElementById(id);
+  if(!pg) return;
+  pg.classList.add('active'); pg.style.display='flex';
+  if(id==='page-buyer'){ renderProducts(); renderSuppliers(); renderOrders(); }
+  if(id==='page-admin'){ refreshStats(); renderAdminProds(); renderAdminComps(); renderAdminPays(); renderPending(); renderFeatures(); updateSupDrop(); loadSettingsForm(); }
+  if(id==='page-seller-payment'){ updatePayDisplay(); }
+  if(id==='page-welcome'){ updateWelcomeStats(); }
+};
+
+function updateWelcomeStats(){
+  si('w-prods', products.length);
+  si('w-comps', companies.length);
+}
+
+// ── BUYER TABS ──
+window.buyerTab = function(name,btn){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['products','suppliers','orders'].forEach(t=>{ document.getElementById('bt-'+t).style.display=t===name?'block':'none'; });
+  if(name==='products') renderProducts();
+  if(name==='suppliers') renderSuppliers();
+  if(name==='orders') renderOrders();
+};
+
+// ── PRODUCTS ──
+function getCategories(){ return [...new Set(products.map(p=>p.category))]; }
+function renderProducts(){
+  const search = (document.getElementById('search')?.value||'').toLowerCase();
+  const cat = document.getElementById('cat-filter')?.value||'';
+  const sel = document.getElementById('cat-filter');
+  const cur = sel?.value;
+  if(sel) sel.innerHTML='<option value="">All Categories</option>'+getCategories().map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+  const list = products.filter(p=>
+    (p.name.toLowerCase().includes(search)||p.supplier.toLowerCase().includes(search))&&(!cat||p.category===cat)
+  );
+  const el = document.getElementById('products-list');
+  if(!list.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><div style="font-size:40px;">🔍</div><p>No products found</p></div>'; return; }
+  el.innerHTML = list.map(p=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+        <span class="tag tag-teal">${p.category}</span>
+        <div style="display:flex;gap:6px;">${stockTag(p)}${p.verified?'<span style="color:var(--success);font-size:11px;font-weight:600;">✓</span>':''}</div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;margin-bottom:5px;">${p.name}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">${p.description||''}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:3px;">🏢 ${p.supplier}</div>
+      <div style="font-size:12px;margin-bottom:12px;color:${p.stock>0?'var(--success)':'var(--danger)'};">📦 ${p.stock>0?p.stock+' units available':'Out of stock'}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:17px;font-weight:700;">ETB ${Number(p.price).toLocaleString()}</div>
+        <div style="display:flex;gap:7px;">
+          ${p.status!=='stockout'&&p.stock>0?`<button class="btn-sm btn-sm-teal" onclick="addToCart('${p.id}')">+ Order</button>`:'<button class="btn-sm" style="background:#eee;color:var(--muted);cursor:not-allowed;" disabled>Unavailable</button>'}
+          <button class="btn-sm btn-sm-wa" onclick="contactWA('${getPhone(p.supplier)}','${p.name}')">💬 WA</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function getPhone(name){ const c=companies.find(c=>c.name===name); return c?c.phone:'+251911000000'; }
+
+// ── SUPPLIERS ──
+function renderSuppliers(){
+  const el = document.getElementById('suppliers-list'); if(!el) return;
+  if(!companies.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);">No suppliers yet</div>'; return; }
+  el.innerHTML = companies.map(c=>`
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+        <div style="width:46px;height:46px;background:var(--navy);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏭</div>
+        <div style="flex:1;">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;">${c.name}</div>
+          <div style="font-size:11px;color:var(--teal);font-weight:600;">${c.type||'Pharmaceutical Company'}</div>
+        </div>
+        ${c.verified?'<span class="tag tag-green" style="font-size:10px;">✓ Verified</span>':''}
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:2.1;">
+        <div>📍 ${c.location}</div><div>💊 ${c.specialty}</div>
+        ${c.desc?`<div>📝 ${c.desc}</div>`:''}
+        <div>⭐ ${c.rating||5}/5.0</div>
+      </div>
+      <button onclick="contactWA('${c.phone}','product inquiry')" style="margin-top:12px;width:100%;padding:11px;background:#25d366;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">💬 Contact on WhatsApp</button>
+    </div>
+  `).join('');
+}
+
+// ── CART ──
+window.addToCart = function(id){
+  const p = products.find(x=>x.id===id);
+  if(!p||p.status==='stockout'||p.stock==0) return showNotif('❌ Product is out of stock');
+  const ex = cart.find(x=>x.id===id);
+  if(ex) ex.qty++; else cart.push({...p,qty:1});
+  updateBadge(); showNotif('✓ '+p.name+' added');
+};
+function removeFromCart(id){ cart=cart.filter(x=>x.id!==id); updateBadge(); renderCart(); }
+function updateBadge(){ const b=document.getElementById('cart-badge'); if(!b)return; b.textContent=cart.length; b.style.display=cart.length?'inline':'none'; }
+window.toggleCart = function(){ document.getElementById('cart-modal').classList.toggle('open'); renderCart(); };
+function renderCart(){
+  const el=document.getElementById('cart-items'), tot=document.getElementById('cart-total');
+  if(!cart.length){ el.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px;">Your cart is empty</p>'; tot.textContent=''; return; }
+  el.innerHTML=cart.map(i=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);">
+      <div><div style="font-weight:600;font-size:14px;">${i.name}</div><div style="font-size:12px;color:var(--muted);">Qty:${i.qty} × ETB ${Number(i.price).toLocaleString()}</div></div>
+      <button onclick="removeFromCart('${i.id}')" style="background:#fee;border:none;color:var(--danger);border-radius:6px;padding:5px 10px;cursor:pointer;">✕</button>
+    </div>
+  `).join('');
+  const t=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  tot.textContent='Total: ETB '+t.toLocaleString();
+}
+window.placeOrder = async function(){
+  if(!cart.length) return;
+  const t=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  await addDoc(collection(db,ORDS),{items:cart.map(i=>({id:i.id,name:i.name,qty:i.qty,price:i.price})),total:t,status:'pending',date:new Date().toLocaleDateString(),createdAt:serverTimestamp()});
+  // Reduce stock
+  for(const item of cart){
+    const p=products.find(x=>x.id===item.id);
+    if(p){ const newStock=Math.max(0,p.stock-item.qty); await updateDoc(doc(db,PRODS,item.id),{stock:newStock,status:newStock===0?'stockout':newStock<200?'low':'available'}); }
+  }
+  cart=[]; updateBadge(); window.toggleCart(); showNotif('✓ Order placed!');
+};
+function renderOrders(){
+  const el=document.getElementById('orders-list'); if(!el) return;
+  if(!orders.length){ el.innerHTML='<div style="text-align:center;padding:50px;color:var(--muted);"><div style="font-size:48px;">📋</div><p>No orders yet</p></div>'; return; }
+  el.innerHTML=orders.map(o=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <div style="font-weight:700;font-size:14px;">${(o.items||[]).map(i=>i.name).join(', ')}</div>
+        <span class="tag tag-yellow">${o.status}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);">${o.date} · <strong style="color:var(--navy);">ETB ${Number(o.total).toLocaleString()}</strong></div>
+    </div>
+  `).join('');
+}
+
+// ── WHATSAPP ──
+window.contactWA = function(phone,product){
+  const msg=encodeURIComponent('Hello! I found your listing "'+product+'" on HopePharm Bridge Ethiopia. I\'d like to enquire about availability and pricing.');
+  window.open('https://wa.me/'+phone.replace(/\D/g,'')+'?text='+msg,'_blank');
+};
+
+// ── SELLER REGISTER ──
+window.proceedToPayment = function(){
+  const co=v('reg-company'),lo=v('reg-location'),ph=v('reg-phone'),pn=v('reg-prod-name'),pp=v('reg-prod-price');
+  if(!co||!lo||!ph) return showNotif('⚠️ Fill company name, location & WhatsApp');
+  if(!pn||!pp) return showNotif('⚠️ Add at least one product');
+  tempSeller={company:co,type:v('reg-type'),location:lo,phone:ph,specialty:v('reg-specialty')||'General',
+    product:{name:pn,category:v('reg-prod-cat')||'General',price:parseFloat(pp),stock:parseInt(v('reg-prod-stock'))||0,status:v('reg-prod-status')||'available',description:v('reg-prod-desc')||''}};
+  goTo('page-seller-payment');
+};
+function updatePayDisplay(){
+  si('pay-show-amount','ETB '+Number(settings.listingFee).toLocaleString());
+  si('pay-show-method',settings.payMethod);
+  si('pay-show-number',settings.payNumber);
+}
+window.submitSellerPayment = async function(){
+  const ref=v('pay-ref');
+  if(!ref){document.getElementById('pay-error').textContent='⚠️ Please enter payment reference';document.getElementById('pay-error').style.display='block';return;}
+  document.getElementById('pay-error').style.display='none';
+  await addDoc(collection(db,PAYS),{...tempSeller,payRef:ref,payPhone:v('pay-phone-confirm'),status:'pending',date:new Date().toLocaleDateString(),createdAt:serverTimestamp()});
+  tempSeller={};
+  ['reg-company','reg-location','reg-phone','reg-specialty','reg-prod-name','reg-prod-cat','reg-prod-price','reg-prod-stock','reg-prod-desc','pay-ref','pay-phone-confirm'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  goTo('page-seller-success');
+};
+
+// ── ADMIN LOGIN ──
+window.adminLogin = function(){
+  const u=v('admin-user'),p=v('admin-pass'),err=document.getElementById('login-error');
+  if(u==='admin'&&p===settings.adminPw){err.style.display='none';goTo('page-admin');}
+  else{err.textContent='✕ Wrong username or password';err.style.display='block';}
+};
+window.adminLogout = function(){ goTo('page-welcome'); };
+
+// ── ADMIN TABS ──
+window.adminTab = function(name,btn){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['overview','products','companies','payments','features','settings'].forEach(t=>{document.getElementById('at-'+t).style.display=t===name?'block':'none';});
+  if(name==='products') updateSupDrop();
+  if(name==='settings') loadSettingsForm();
+};
+
+// ── STATS ──
+function refreshStats(){
+  si('s-prods',products.length);
+  si('s-comps',companies.length);
+  si('s-ords',orders.length);
+  const rev=payments.filter(p=>p.status==='approved').length*Number(settings.listingFee||999);
+  si('s-rev','ETB '+rev.toLocaleString());
+}
+
+// ── PENDING ──
+function renderPending(){
+  const el=document.getElementById('pending-list');
+  const pend=payments.filter(p=>p.status==='pending');
+  if(!pend.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">🎉 No pending approvals</div>';return;}
+  el.innerHTML=pend.map(p=>`
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:4px;">${p.company}</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.9;margin-bottom:10px;">📍 ${p.location} · 📞 ${p.phone}<br>💊 ${p.product?.name} · ETB ${p.product?.price}<br>💳 Ref: ${p.payRef} · ${p.date}</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="approveReg('${p.id}')" style="flex:1;padding:10px;background:var(--success);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;font-family:'DM Sans',sans-serif;">✓ Approve & List</button>
+        <button onclick="rejectReg('${p.id}')" style="flex:1;padding:10px;background:#fee;color:var(--danger);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;font-family:'DM Sans',sans-serif;">✕ Reject</button>
+      </div>
+    </div>
+  `).join('');
+}
+window.approveReg = async function(id){
+  const p=payments.find(x=>x.id===id); if(!p) return;
+  await updateDoc(doc(db,PAYS,id),{status:'approved'});
+  await addDoc(collection(db,COMPS),{name:p.company,type:p.type||'Pharmaceutical Company',location:p.location,phone:p.phone,specialty:p.specialty||'General',desc:'',verified:true,rating:5.0,createdAt:serverTimestamp()});
+  await addDoc(collection(db,PRODS),{name:p.product.name,category:p.product.category,price:p.product.price,stock:p.product.stock,status:p.product.status||'available',description:p.product.description||'',supplier:p.company,verified:true,createdAt:serverTimestamp()});
+  showNotif('✓ Approved & listed! Everyone can see it now.');
+};
+window.rejectReg = async function(id){
+  await updateDoc(doc(db,PAYS,id),{status:'rejected'});
+  showNotif('Rejected');
+};
+
+// ── ADMIN PRODUCTS ──
+function updateSupDrop(){ const sel=document.getElementById('np-supplier'); if(!sel)return; sel.innerHTML=companies.map(c=>`<option value="${c.name}">${c.name}</option>`).join(''); }
+window.addProduct = async function(){
+  const name=v('np-name'),price=parseFloat(v('np-price'));
+  if(!name||!price) return showNotif('⚠️ Name and price required');
+  await addDoc(collection(db,PRODS),{name,category:v('np-cat')||'General',price,stock:parseInt(v('np-stock'))||0,status:v('np-status')||'available',supplier:v('np-supplier'),description:v('np-desc')||'',verified:true,createdAt:serverTimestamp()});
+  ['np-name','np-cat','np-price','np-stock','np-desc'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showNotif('✓ Product added! Visible to all buyers now.');
+};
+window.editProduct = function(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  sv('ep-id',id);sv('ep-name',p.name);sv('ep-cat',p.category);sv('ep-price',p.price);sv('ep-stock',p.stock);sv('ep-desc',p.description||'');
+  document.getElementById('ep-status').value=p.status||'available';
+  document.getElementById('edit-prod-modal').classList.add('open');
+};
+window.saveProduct = async function(){
+  const id=v('ep-id'); if(!id) return;
+  await updateDoc(doc(db,PRODS,id),{name:v('ep-name'),category:v('ep-cat'),price:parseFloat(v('ep-price')),stock:parseInt(v('ep-stock')),status:document.getElementById('ep-status').value,description:v('ep-desc')});
+  closeModal('edit-prod-modal'); showNotif('✓ Product updated for everyone!');
+};
+window.deleteProduct = async function(id){
+  if(!confirm('Delete this product?')) return;
+  await deleteDoc(doc(db,PRODS,id));
+  showNotif('Product removed');
+};
+function renderAdminProds(){
+  const el=document.getElementById('admin-prod-list'); if(!el) return;
+  if(!products.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);">No products yet</div>';return;}
+  el.innerHTML=products.map(p=>`
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">${p.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">${p.category} · ${p.supplier} · ETB ${Number(p.price).toLocaleString()}</div>
+          <div style="display:flex;gap:6px;align-items:center;">${stockTag(p)}<span style="font-size:11px;color:var(--muted);">· ${p.stock} units</span></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-sm btn-sm-gold" onclick="editProduct('${p.id}')">✏️</button>
+          <button class="btn-sm btn-sm-danger" onclick="deleteProduct('${p.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── ADMIN COMPANIES ──
+window.addCompany = async function(){
+  const name=v('nc-name'); if(!name) return showNotif('⚠️ Company name required');
+  await addDoc(collection(db,COMPS),{name,type:v('nc-type')||'Pharmaceutical Company',location:v('nc-location')||'Ethiopia',phone:v('nc-phone')||'+251911000000',specialty:v('nc-specialty')||'General',desc:v('nc-desc')||'',verified:true,rating:5.0,createdAt:serverTimestamp()});
+  ['nc-name','nc-location','nc-phone','nc-specialty','nc-desc'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showNotif('✓ Company added! Visible to all buyers now.');
+};
+window.editCompany = function(id){
+  const c=companies.find(x=>x.id===id); if(!c) return;
+  sv('ec-id',id);sv('ec-name',c.name);sv('ec-location',c.location);sv('ec-phone',c.phone);sv('ec-specialty',c.specialty);sv('ec-desc',c.desc||'');
+  document.getElementById('ec-type').value=c.type||'Pharmaceutical Company';
+  document.getElementById('edit-comp-modal').classList.add('open');
+};
+window.saveCompany = async function(){
+  const id=v('ec-id'); if(!id) return;
+  await updateDoc(doc(db,COMPS,id),{name:v('ec-name'),type:document.getElementById('ec-type').value,location:v('ec-location'),phone:v('ec-phone'),specialty:v('ec-specialty'),desc:v('ec-desc')});
+  closeModal('edit-comp-modal'); showNotif('✓ Company updated for everyone!');
+};
+window.deleteCompany = async function(id){
+  if(!confirm('Delete this company?')) return;
+  await deleteDoc(doc(db,COMPS,id));
+  showNotif('Company removed');
+};
+function renderAdminComps(){
+  const el=document.getElementById('admin-comp-list'); if(!el) return;
+  if(!companies.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);">No companies yet</div>';return;}
+  el.innerHTML=companies.map(c=>`
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14px;margin-bottom:2px;">${c.name}</div>
+          <div style="font-size:11px;color:var(--teal);font-weight:600;margin-bottom:4px;">${c.type||'Pharmaceutical Company'}</div>
+          <div style="font-size:11px;color:var(--muted);">📍 ${c.location} · 💊 ${c.specialty}</div>
+          ${c.desc?`<div style="font-size:11px;color:var(--muted);">📝 ${c.desc}</div>`:''}
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-sm btn-sm-gold" onclick="editCompany('${c.id}')">✏️</button>
+          <button class="btn-sm btn-sm-danger" onclick="deleteCompany('${c.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── ADMIN PAYMENTS ──
+function renderAdminPays(){
+  const el=document.getElementById('admin-pay-list'); if(!el) return;
+  if(!payments.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);">No payments yet</div>';return;}
+  el.innerHTML=payments.map(p=>`
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="font-weight:600;font-size:14px;">${p.company}</div>
+        <span class="tag ${p.status==='approved'?'tag-green':p.status==='rejected'?'tag-red':'tag-yellow'}">${p.status}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.9;">📞 ${p.phone} · 💳 ${p.payRef} · ${p.date}</div>
+    </div>
+  `).join('');
+}
+
+// ── FEATURES ──
+window.addFeature = async function(){
+  const title=v('feat-title'); if(!title) return showNotif('⚠️ Enter a feature title');
+  await addDoc(collection(db,FEATS),{title,desc:v('feat-desc'),by:v('feat-by')||'Anonymous',priority:v('feat-priority')||'🟡 Medium',status:'pending',date:new Date().toLocaleDateString(),createdAt:serverTimestamp()});
+  ['feat-title','feat-desc','feat-by'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showNotif('✓ Feature request saved!');
+};
+window.markFeatureDone = async function(id){ await updateDoc(doc(db,FEATS,id),{status:'done'}); showNotif('✓ Marked as done!'); };
+window.deleteFeature = async function(id){ await deleteDoc(doc(db,FEATS,id)); showNotif('Removed'); };
+function renderFeatures(){
+  const el=document.getElementById('features-list'); if(!el) return;
+  if(!features.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">No feature requests yet.<br>Add customer recommendations above!</div>';return;}
+  el.innerHTML=features.map(f=>`
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">
+        <div style="font-weight:600;font-size:14px;">${f.title}</div>
+        <span class="tag ${f.status==='done'?'tag-green':'tag-yellow'}" style="flex-shrink:0;">${f.status==='done'?'✓ Done':'Pending'}</span>
+      </div>
+      ${f.desc?`<div style="font-size:12px;color:var(--muted);margin-bottom:5px;">${f.desc}</div>`:''}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">👤 ${f.by} · ${f.priority} · ${f.date}</div>
+      <div style="display:flex;gap:7px;">
+        ${f.status!=='done'?`<button class="btn-sm btn-sm-teal" onclick="markFeatureDone('${f.id}')" style="font-size:11px;">✓ Mark Done</button>`:''}
+        <button class="btn-sm btn-sm-danger" onclick="deleteFeature('${f.id}')" style="font-size:11px;">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── SETTINGS ──
+function loadSettingsForm(){
+  sv('s-paynum', settings.payNumber||'');
+  sv('s-paymethod', settings.payMethod||'');
+  sv('s-payamount', settings.listingFee||999);
+  updateSettingsPreview();
+}
+function updateSettingsPreview(){
+  si('prev-amount','ETB '+(settings.listingFee||999));
+  si('prev-method',settings.payMethod||'');
+  si('prev-number',settings.payNumber||'');
+}
+window.changePassword = async function(){
+  const cur=v('s-cur'),nw=v('s-new'),con=v('s-con');
+  const msg=document.getElementById('pw-msg');
+  const show=(text,ok)=>{msg.textContent=text;msg.style.background=ok?'#d1fae5':'#fee';msg.style.color=ok?'var(--success)':'var(--danger)';msg.style.display='block';};
+  if(cur!==settings.adminPw) return show('✕ Current password is wrong',false);
+  if(nw.length<6) return show('✕ New password must be at least 6 characters',false);
+  if(nw!==con) return show('✕ Passwords do not match',false);
+  await updateDoc(doc(db,SETT,'main'),{adminPw:nw});
+  settings.adminPw=nw;
+  ['s-cur','s-new','s-con'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  show('✓ Password updated! Saved to Firebase — works on all devices.',true);
+  setTimeout(()=>msg.style.display='none',4000);
+  showNotif('✓ Password changed successfully!');
+};
+window.savePaymentSettings = async function(){
+  const num=v('s-paynum'); if(!num) return showNotif('⚠️ Enter a payment number');
+  const updates={payNumber:num};
+  const method=v('s-paymethod'); if(method) updates.payMethod=method;
+  const amount=v('s-payamount'); if(amount) updates.listingFee=parseInt(amount);
+  await updateDoc(doc(db,SETT,'main'),updates);
+  const msg=document.getElementById('pay-save-msg');
+  msg.textContent='✓ Saved to Firebase! All users will see updated payment info.';
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',3000);
+  showNotif('✓ Payment details updated for everyone!');
+};
+window.togglePw = function(){
+  const el=document.getElementById('show-pw'),btn=document.getElementById('pw-toggle-btn');
+  if(el.textContent==='••••••••'){el.textContent=settings.adminPw;btn.textContent='Hide';}
+  else{el.textContent='••••••••';btn.textContent='Show';}
+};
+window.closeModal = closeModal;
+
+// ── START ──
+init();
+</script>
+</body>
+</html>
